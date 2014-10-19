@@ -1,0 +1,53 @@
+
+public class MediaItems {
+
+	private String title;
+	private String format;
+	private String loanedTo;
+	private String dateLoaned;
+	private boolean onLoan;
+	
+	MediaItems()
+	{
+		this.title = null;
+		this.format = null;
+		this.loanedTo = null;
+		this.dateLoaned = null;
+		this.onLoan = false;
+	}
+
+    MediaItems(String title, String format, String loanedTo, String dateLoaned, boolean onLoan){ 
+		this.title = title;
+		this.format = format;
+		this.loanedTo = loanedTo;
+		this.dateLoaned = dateLoaned;
+		this.onLoan = onLoan;
+	}
+    
+    public String getTitle(){return this.title;}
+    public String getFormat(){return this.format;}
+    public String getLoanedTo(){return this.loanedTo;}
+    public String getDateLoaned(){return this.dateLoaned;}
+    public boolean getOnLoan(){return this.onLoan;}
+    
+    
+    public void setTitle(String title){this.title= title;}
+    public void setFormat(String format){this.format= format;}
+    public void setLoanedTo(String loanedTo){this.loanedTo=loanedTo;}
+    public void setDateLoaned(String dateLoaned){this.dateLoaned=dateLoaned;}
+    public void setOnLoan(boolean onLoan){this.onLoan=onLoan;}
+    
+    void markOnLoan(String name,String date){
+    	setOnLoan(true);
+    	setLoanedTo(name);
+    	setDateLoaned(date);
+    }
+    
+    void markReturned(){
+    	setOnLoan(false);
+    	setLoanedTo(null);
+    	setDateLoaned(null);
+    }
+
+
+}
