@@ -1,0 +1,126 @@
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+
+public class LibraryGUI extends JFrame{
+	
+	Library starter= new Library();
+	private static final long serialVersionUID = 1L;
+	private JButton btn,btn1,btn2,btn3;
+	private JList<String> list;
+	public int index;
+	public int choice;
+			
+	public LibraryGUI(){
+		super("Lending Library");
+		
+		JPanel panel = new JPanel(new GridLayout(1,4,5,10));
+		JPanel thePanel = new JPanel();
+		this.setSize(600, 500);
+		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		this.addWindowListener(new WindowAdapter(){
+				public void windowClosing(WindowEvent event){
+					String allItems[] = starter.listAllItems();
+					for(int i=0;i<allItems.length;i++){
+						System.out.println(allItems[i]);
+					}	
+						System.exit(0);
+				}
+		});
+				
+		this.setVisible(true);
+	
+		ListenForButton l = new ListenForButton();
+		list = new JList<String>(starter.listAllItems());	//this way is the only way I can get the gui running
+		//list.setListData(starter.listAllItems());			//this is the way the teacher asked for but does not work
+		list.setVisible(true);		
+		
+		btn = new JButton("Add");
+		btn1 = new JButton("Check In");
+		btn2 = new JButton("Check Out");
+		btn3 = new JButton("Delete");		
+		
+		thePanel.setLayout(new BorderLayout());
+			
+		thePanel.add(new JScrollPane(list),BorderLayout.NORTH);
+		thePanel.add(panel,BorderLayout.SOUTH);
+		
+		list.addListSelectionListener(
+				new ListSelectionListener(){
+					public void valueChanged(ListSelectionEvent arg0) {
+						index=list.getSelectedIndex();
+						
+					}
+				}
+			);
+		
+		btn.addActionListener(l);
+		btn1.addActionListener(l);
+		btn2.addActionListener(l);
+		btn3.addActionListener(l);
+		
+		panel.add(btn);
+		panel.add(btn1);
+		panel.add(btn2);	
+		panel.add(btn3);
+
+		this.add(thePanel);
+	}
+
+	private class ListenForButton implements ActionListener{
+
+		String title;							//fields
+		String format;
+		String loanedTo;
+		String dateLoaned;
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			if(e.getSource()==btn){//title and format button
+		
+    			title = JOptionPane.showInputDialog(null,"What is the title?","Title",JOptionPane.QUESTION_MESSAGE);
+    			format = JOptionPane.showInputDialog(null,"What kind of media is it?","Media",JOptionPane.QUESTION_MESSAGE);
+				starter.addNewItem(title, format);
+				
+			
+			}
+			if(e.getSource()==btn1){//onloan button
+				
+				if(starter.mediaItems.get(index).getOnLoan()){
+					JOptionPane.showInputDialog(null,"This one is already checked out!","Wrong",JOptionPane.ERROR_MESSAGE);
+				}else{
+					title=starter.mediaItems.get(index).getTitle();
+				
+					loanedTo = JOptionPane.showInputDialog(null,"What is your name?","Name",JOptionPane.QUESTION_MESSAGE);
+    			
+    				dateLoaned = JOptionPane.showInputDialog(null,"What is the date?","Date",JOptionPane.QUESTION_MESSAGE);
+    				starter.markItemOnLoan(title, loanedTo, dateLoaned);
+				}
+			}
+			if(e.getSource()==btn2){//return button
+				title=starter.mediaItems.get(index).getTitle();
+    			starter.markItemReturned(title);
+				
+			}
+			if(e.getSource()==btn3){//delete button
+				title=starter.mediaItems.get(index).getTitle();
+    			starter.delete(title);
+    		
+				
+			}
+		}
+		
+	}
+}
